@@ -4,6 +4,10 @@ from .ui import LocalChatbotUI
 from .pipeline import LocalRAGPipeline
 from .logger import Logger
 from .ollama import run_ollama_server, is_port_open
+from dotenv import load_dotenv
+
+# LOAD DOTENV
+print(load_dotenv())
 
 # CONSTANTS
 LOG_FILE = "logging.log"

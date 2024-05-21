@@ -115,7 +115,7 @@ class LocalChatbotUI:
             sys.stdout = console
 
     def _get_confirm_pull_model(self, model: str):
-        if (model in ["gpt-3.5-turbo", "gpt-4"]) or (self._pipeline.check_exist(model)):
+        if (model in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4-turbo"]) or (self._pipeline.check_exist(model)):
             self._change_model(model)
             return (
                 gr.update(visible=False),
@@ -129,7 +129,7 @@ class LocalChatbotUI:
         )
 
     def _pull_model(self, model: str, progress=gr.Progress(track_tqdm=True)):
-        if (model not in ["gpt-3.5-turbo", "gpt-4"]) and not (self._pipeline.check_exist(model)):
+        if (model not in ["gpt-3.5-turbo", "gpt-4", "gpt-4o", "gpt-4-turbo"]) and not (self._pipeline.check_exist(model)):
             response = self._pipeline.pull_model(model)
             if response.status_code == 200:
                 gr.Info(f"Pulling {model}!")
@@ -301,13 +301,10 @@ class LocalChatbotUI:
                             model = gr.Dropdown(
                                 label="Choose Model:",
                                 choices=[
-                                    "llama3-chatqa:8b-v1.5-q8_0",
-                                    "llama3-chatqa:8b-v1.5-q6_K",
-                                    "llama3:8b-instruct-q8_0",
-                                    "starling-lm:7b-beta-q8_0",
-                                    "mixtral:instruct",
-                                    "nous-hermes2:10.7b-solar-q4_K_M",
-                                    "codeqwen:7b-chat-v1.5-q5_1",
+                                    "gpt-3.5-turbo",
+                                    "gpt-4",
+                                    "gpt-4o",
+                                    "gpt-4-turbo"
                                 ],
                                 value=None,
                                 interactive=True,

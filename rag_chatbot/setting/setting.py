@@ -37,7 +37,7 @@ class OllamaSettings(BaseModel):
         default=0.1, description="Temperature"
     )
     chat_token_limit: int = Field(
-        default=3000, description="Chat memory limit"
+        default=5000, description="Chat memory limit"
     )
 
 
@@ -64,7 +64,7 @@ class RetrieverSettings(BaseModel):
 
 class IngestionSettings(BaseModel):
     embed_llm: str = Field(
-        default="BAAI/bge-large-en-v1.5", description="Embedding LLM model"
+        default="BAAI/bge-m3", description="Embedding LLM model"
     )
     embed_batch_size: int = Field(
         default=8, description="Embedding batch size"
