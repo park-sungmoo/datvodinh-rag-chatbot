@@ -60,9 +60,6 @@ class LocalDataIngestion:
                     all_text += " " + page_text
                 document = Document(
                     text=all_text.strip(),
-                    metadata={
-                        "file_name": file_name,
-                    }
                 )
 
                 nodes = splitter([document], show_progress=True)

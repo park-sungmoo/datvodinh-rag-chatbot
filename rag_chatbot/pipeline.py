@@ -1,25 +1,34 @@
+import os
 from .core import (
     LocalChatEngine,
     LocalDataIngestion,
     LocalRAGModel,
     LocalEmbedding,
+    ReActRAGAgent,
     LocalVectorStore,
     get_system_prompt
 )
 from llama_index.core import Settings
 from llama_index.core.chat_engine.types import StreamingAgentChatResponse
 from llama_index.core.prompts import ChatMessage, MessageRole
+from llama_index.core import load_index_from_storage, StorageContext
 
 
 class LocalRAGPipeline:
     def __init__(self, host: str = "host.docker.internal") -> None:
         self._host = host
         self._language = "eng"
-        self._model_name = ""
+        self._model_name = "gpt-4o"
         self._system_prompt = get_system_prompt("eng", is_rag_prompt=False)
-        self._engine = LocalChatEngine(host=host)
+        self._engine = ReActRAGAgent(host=host)
         self._default_model = LocalRAGModel.set(self._model_name, host=host)
-        self._query_engine = None
+        index_load = load_index_from_storage(
+            StorageContext.from_defaults(persist_dir=os.path.join(os.getcwd(), "storage")))
+        self._query_engine = self._engine.set_engine(
+            llm=self._default_model,
+            nodes=list(index_load.docstore.docs.values()),
+            language=self._language
+        )
         self._ingestion = LocalDataIngestion()
         self._vector_store = LocalVectorStore(host=host)
         Settings.llm = LocalRAGModel.set(host=host)
@@ -107,9 +116,11 @@ class LocalRAGPipeline:
         self.set_engine()
 
     def set_engine(self):
+        index_load = load_index_from_storage(
+            StorageContext.from_defaults(persist_dir=os.path.join(os.getcwd(), "storage")))
         self._query_engine = self._engine.set_engine(
             llm=self._default_model,
-            nodes=self._ingestion.get_ingested_nodes(),
+            nodes=list(index_load.docstore.docs.values()),
             language=self._language
         )
 

@@ -7,7 +7,8 @@ from llama_index.core.retrievers import (
 )
 from llama_index.core.callbacks.base import CallbackManager
 from llama_index.core.retrievers.fusion_retriever import FUSION_MODES
-from llama_index.core.postprocessor import SentenceTransformerRerank
+from llama_index.llms.openai import OpenAI
+from llama_index.postprocessor.rankgpt_rerank import RankGPTRerank
 from llama_index.core.schema import BaseNode, NodeWithScore, QueryBundle, IndexNode
 from llama_index.core.llms.llm import LLM
 from llama_index.retrievers.bm25 import BM25Retriever
@@ -40,9 +41,14 @@ class TwoStageRetriever(QueryFusionRetriever):
             use_async, verbose, callback_manager, objects, object_map, retriever_weights
         )
         self._setting = setting or RAGSettings()
-        self._rerank_model = SentenceTransformerRerank(
+        # self._rerank_model = SentenceTransformerRerank(
+        #     top_n=self._setting.retriever.top_k_rerank,
+        #     model=self._setting.retriever.rerank_llm,
+        # )
+        self._rerank_model = RankGPTRerank(
             top_n=self._setting.retriever.top_k_rerank,
-            model=self._setting.retriever.rerank_llm,
+            llm=OpenAI(model="gpt-3.5-turbo-16k"),
+            verbose=True
         )
 
     def _retrieve(self, query_bundle: QueryBundle) -> List[NodeWithScore]:

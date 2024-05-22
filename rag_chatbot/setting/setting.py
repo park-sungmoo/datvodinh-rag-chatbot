@@ -46,7 +46,7 @@ class RetrieverSettings(BaseModel):
         default=5, description="Number of generated queries"
     )
     similarity_top_k: int = Field(
-        default=20, description="Top k documents"
+        default=15, description="Top k documents"
     )
     retriever_weights: List[float] = Field(
         default=[0.4, 0.6], description="Weights for retriever"
@@ -64,7 +64,7 @@ class RetrieverSettings(BaseModel):
 
 class IngestionSettings(BaseModel):
     embed_llm: str = Field(
-        default="BAAI/bge-m3", description="Embedding LLM model"
+        default="text-embedding-3-large", description="Embedding LLM model"
     )
     embed_batch_size: int = Field(
         default=8, description="Embedding batch size"

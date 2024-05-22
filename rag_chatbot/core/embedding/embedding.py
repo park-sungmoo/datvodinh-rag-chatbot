@@ -6,8 +6,6 @@ from llama_index.embeddings.openai import OpenAIEmbedding
 from transformers import AutoModel, AutoTokenizer
 from ...setting import RAGSettings
 from dotenv import load_dotenv
-
-
 load_dotenv()
 
 
@@ -16,7 +14,7 @@ class LocalEmbedding:
     def set(setting: RAGSettings | None = None, **kwargs):
         setting = setting or RAGSettings()
         model_name = setting.ingestion.embed_llm
-        if model_name != "text-embedding-ada-002":
+        if model_name not in ["text-embedding-ada-002", "text-embedding-3-large"]:
             return HuggingFaceEmbedding(
                 model=AutoModel.from_pretrained(
                     model_name,

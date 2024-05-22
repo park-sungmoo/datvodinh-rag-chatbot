@@ -19,7 +19,14 @@ class DefaultElement:
     DEFAULT_HISTORY: ClassVar[list] = []
     DEFAULT_DOCUMENT: ClassVar[list] = []
 
-    HELLO_MESSAGE: str = "Hi 👋, how can I help you today?"
+    HELLO_MESSAGE: str = (
+        "Chào bạn 👋, mình là DemoBot - chatbot được phát triển bởi DMQ và VDD. "
+        "DemoBot hiện tại là phiên bản thử nghiệm, được thiết kế để cung cấp thông tin và tư vấn về các ngành học tại HUST, "
+        "đặc biệt là các ngành liên quan đến Công nghệ Thông tin như Khoa học Máy tính. "
+        "Nếu bạn có bất kỳ câu hỏi nào về các ngành học khác tại HUST, xin vui lòng lưu ý rằng khả năng của tôi hiện tại chỉ giới hạn trong phạm vi các ngành Công nghệ Thông tin. "
+        "Vì vậy, nếu câu hỏi của bạn không liên quan đến các ngành IT, tôi sẽ không thể cung cấp thông tin chi tiết."
+        "Bạn có thể thử lại với câu hỏi khác hoặc liên hệ với các phòng ban liên quan để biết thêm thông tin chi tiết.")
+
     SET_MODEL_MESSAGE: str = "You need to choose LLM model 🤖 first!"
     EMPTY_MESSAGE: str = "You need to enter your message!"
     DEFAULT_STATUS: str = "Ready!"
@@ -39,7 +46,7 @@ class LLMResponse:
 
     def _yield_string(self, message: str):
         for i in range(len(message)):
-            time.sleep(0.01)
+            # time.sleep(0.01)
             yield (
                 DefaultElement.DEFAULT_MESSAGE,
                 [[None, message[:i+1]]],
@@ -279,7 +286,7 @@ class LocalChatbotUI:
         ) as demo:
             gr.Markdown("## Local RAG Chatbot 🤖")
             with gr.Tab("Interface"):
-                sidebar_state = gr.State(True)
+                sidebar_state = gr.State(False)
                 with gr.Row(variant=self._variant, equal_height=False):
                     with gr.Column(
                         variant=self._variant,
@@ -308,7 +315,8 @@ class LocalChatbotUI:
                                 ],
                                 value=None,
                                 interactive=True,
-                                allow_custom_value=True
+                                allow_custom_value=True,
+                                visible=False
                             )
                             with gr.Row():
                                 pull_btn = gr.Button(
@@ -328,7 +336,8 @@ class LocalChatbotUI:
                                 file_types=[".txt", ".pdf", ".csv"],
                                 file_count="multiple",
                                 height=150,
-                                interactive=True
+                                interactive=True,
+                                visible=False
                             )
                             with gr.Row():
                                 upload_doc_btn = gr.UploadButton(
