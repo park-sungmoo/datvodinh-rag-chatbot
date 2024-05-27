@@ -28,6 +28,16 @@ class LocalDataIngestion:
 
         return normalized_text
 
+    def get_document(self, input_file: str) -> Document:
+        document = fitz.open(input_file)
+        all_text = ""
+        for doc_idx, page in enumerate(document):
+            page_text = page.get_text("text")
+            page_text = self._filter_text(page_text)
+            all_text += " " + page_text
+        document = Document(text=all_text.strip())
+        return document
+
     def store_nodes(
         self,
         input_files: list[str],
@@ -52,16 +62,7 @@ class LocalDataIngestion:
             if file_name in self._node_store:
                 return_nodes.extend(self._node_store[file_name])
             else:
-                document = fitz.open(input_file)
-                all_text = ""
-                for doc_idx, page in enumerate(document):
-                    page_text = page.get_text("text")
-                    page_text = self._filter_text(page_text)
-                    all_text += " " + page_text
-                document = Document(
-                    text=all_text.strip(),
-                )
-
+                document = self.get_document(input_file)
                 nodes = splitter([document], show_progress=True)
                 if embed_nodes:
                     nodes = Settings.embed_model(nodes, show_progress=True)

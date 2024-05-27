@@ -9,10 +9,6 @@ from typing import List
 from ...setting import RAGSettings
 
 
-def retriever():
-    pass
-
-
 class ReActRAGAgent:
     def __init__(
         self,
@@ -42,7 +38,10 @@ class ReActRAGAgent:
                 description=(
                     "Use this tool for question related to university (such as HUST)"
                     "or about IT major such as Computer Science."
-                    "Do not use this tool for other questions or not IT related."
+                    "Only use when user mention about HUST or IT major at HUST "
+                    "(not IT related field such as Machine Learning or Software Engineer, only IT major at HUST)."
+                    "Do NOT use this tool for other questions that are NOT related to HUST and IT major at HUST, "
+                    "even if the question is about IT field (but not related to HUST)."
                 ),
                 name="retriever",
             ),

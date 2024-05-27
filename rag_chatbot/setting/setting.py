@@ -52,7 +52,7 @@ class RetrieverSettings(BaseModel):
         default=[0.4, 0.6], description="Weights for retriever"
     )
     top_k_rerank: int = Field(
-        default=6, description="Top k rerank"
+        default=8, description="Top k rerank"
     )
     rerank_llm: str = Field(
         default="BAAI/bge-reranker-large", description="Rerank LLM model"
